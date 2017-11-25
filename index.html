@@ -19,12 +19,8 @@
       text-decoration: none;
       }
 
-      a:hover, #fork a:hover {
+      a:hover, #fork a:hover, #gofull a:hover {
       background-color: #777;
-      }
-
-      #fork a {
-      box-shadow: 0px 0px 8px #444;
       }
 
       div#fork {
@@ -34,7 +30,16 @@
       z-index: 10;
       }
 
-      #fork a {
+      div#gofull {
+      position: absolute;
+      bottom: 25px;
+      right: 25px;
+      z-index: 10;
+      cursor: pointer;
+      }
+
+      #fork a, #gofull a {
+      box-shadow: 0px 0px 8px #444;
       display: inline-block;
       background-color:  #333;
       }
@@ -102,6 +107,11 @@
     <div id="fork">
       <a href="https://github.com/Macroz/stars">
         Fork me on Github
+      </a>
+    </div>
+    <div id="gofull">
+      <a onclick="goFullscreen();">
+        Fullscreen
       </a>
     </div>
   </body>
