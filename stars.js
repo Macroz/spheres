@@ -422,9 +422,12 @@ function render() {
 
 function initFullscreen() {
   var gofull = document.getElementById('gofull');
+  alert(gofull);
   if (gofull) {
+    alert(1);
     gofull.addEventListener('mousedown', goFullscreen);
     gofull.addEventListener('touchstart', goFullscreen);
+    alert(2);
   } else {
     setTimeout(initFullscreen, 500);
   }
