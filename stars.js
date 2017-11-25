@@ -192,14 +192,9 @@ function init() {
   bufferGeometry.addAttribute('size', new THREE.BufferAttribute(sizes, 1));
   bufferGeometry.addAttribute('center', centerAttribute);
 
-  var cameraPosition = new Float32Array(3);
-  cameraPosition[0] = 0;//camera.position.x;
-  cameraPosition[1] = 0;//camera.position.y;
-  cameraPosition[2] = 0;//camera.position.z;
-
   uniforms = {
     texture: { type: "t", value: THREE.ImageUtils.loadTexture('sphere.png') },
-    uCameraPos: { type: "3f", value: cameraPosition },
+    uCameraPos: { type: "3f", value: THREE.Vector3(0, 0, 0) },
     uReflection: { type: "1f", value: 0.0 }
   };
 
@@ -252,7 +247,7 @@ function init() {
     });
     textGeo.computeBoundingBox();
     textGeo.computeVertexNormals();
-    var centerOffset = 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+    var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
     var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
     textMesh1 = new THREE.Mesh( textGeo, metalMaterial );
     textMesh1.position.x = centerOffset;
@@ -355,11 +350,6 @@ function animate() {
 }
 
 function render() {
-  var cameraPosition = new Float32Array(3);
-  cameraPosition[0] = camera.position.x;
-  cameraPosition[1] = camera.position.y;
-  cameraPosition[2] = camera.position.z;
-
   shaderMaterial.uniforms.uCameraPos.value = cameraPosition;
 
   if (count % 2 === 0) {
