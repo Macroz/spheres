@@ -124,6 +124,7 @@ function createSphere(n, size, angle, speed) {
 function init() {
   THREE.ImageUtils.crossOrigin = '';
   container = document.createElement('div');
+  container.id = 'fullscreen';
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
@@ -293,11 +294,20 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.appendChild(renderer.domElement);
 
+  document.addEventListener('mousedown', onDocumentMouseDown, false);
   document.addEventListener('mousemove', onDocumentMouseMove, false);
   document.addEventListener('touchstart', onDocumentTouchStart, false);
   document.addEventListener('touchmove', onDocumentTouchMove, false);
 
   window.addEventListener('resize', onWindowResize, false);
+}
+
+function onDocumentMouseDown(event) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  if (event.button === 2) {
+    requestFullscreen.call(target);
+  }
 }
 
 function onDocumentMouseMove(event) {
@@ -306,6 +316,11 @@ function onDocumentMouseMove(event) {
 }
 
 function onDocumentTouchStart(event) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  if (event.touches.length > 1) {
+    requestFullscreen.call(target);
+  }
   if (event.touches.length === 1) {
     event.preventDefault();
     mouseX = event.touches[ 0 ].pageX - windowHalfX;
