@@ -298,9 +298,6 @@ function init() {
   document.addEventListener('mousemove', onDocumentMouseMove, false);
   document.addEventListener('touchstart', onDocumentTouchStart, false);
   document.addEventListener('touchmove', onDocumentTouchMove, false);
-  document.getElementById('gofull').addEventListener('mousedown', goFullscreen);
-  document.getElementById('gofull').addEventListener('touchstart', goFullscreen);
-
   window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -422,3 +419,10 @@ function render() {
 
   renderer.render(scene, camera);
 }
+
+
+setTimeout(function () {
+var gofull = document.getElementById('gofull');
+gofull.addEventListener('mousedown', goFullscreen);
+gofull.addEventListener('touchstart', goFullscreen);
+}, 100);
