@@ -69,16 +69,13 @@ function createSphere(n, size, angle) {
     vertices[i * 3 + 1] = y;
     vertices[i * 3 + 2] = z;
 
-    var brightness = Math.random();
-    //var c = Math.random();//Math.pow(f, 0.8);
-    var c = brightness;
+    var c = Math.random();
     colors[i * 3 + 0] = c * r1 + (1.0 - c) * r2;
     colors[i * 3 + 1] = c * g1 + (1.0 - c) * g2;
     colors[i * 3 + 2] = c * b1 + (1.0 - c) * b2;
 
-    var a = 0.1;//Math.pow(1.0, brightness);
-    alphas[i] = 0.25;//Math.random() * (400.0 - s) / 5000.0 * Math.pow(g, 0.49);
-    sizes[i] = 0.5 * size;//0.1 * size + 0.9 * brightness * size;
+    alphas[i] = 0.25;
+    sizes[i] = 0.5 * size;
 
     centers[i * 3 + 0] = 0;
     centers[i * 3 + 1] = 0;
@@ -90,20 +87,6 @@ function createSphere(n, size, angle) {
     var g = i / (clouds + stars);
     var a = Math.random() * 3.14159 * 2.0;
 
-    /* var x1 = Math.random() * 2.0 - 1.0;
-     * var x2 = Math.random() * 2.0 - 1.0;
-
-     * // Marsaglia's method
-     * while (x1 * x1 + x2 * x2 > 1) {
-     *   x1 = Math.random() * 2.0 - 1.0;
-     *   x2 = Math.random() * 2.0 - 1.0;
-     * }
-
-     * var r = f * 700 / 1.25;
-     * var x = r * 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-     * var y = r * 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-     * var z = r * (1 - 2 * (x1 * x1 + x2 * x2));
-     */
     x = vertices[(i - clouds) * 3 + 0];
     y = vertices[(i - clouds) * 3 + 1];
     z = vertices[(i - clouds) * 3 + 2];
