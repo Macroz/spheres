@@ -8,23 +8,24 @@ var windowHalfY = window.innerHeight / 2;
 init();
 animate();
 
-function init() {
-  THREE.ImageUtils.crossOrigin = '';
-  container = document.createElement('div');
-  document.body.appendChild(container);
+function marsaglia() {
+  var x1 = Math.random() * 2.0 - 1.0;
+  var x2 = Math.random() * 2.0 - 1.0;
 
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
-  scene = new THREE.Scene();
+  // Marsaglia's method
+  while (x1 * x1 + x2 * x2 > 1) {
+    x1 = Math.random() * 2.0 - 1.0;
+    x2 = Math.random() * 2.0 - 1.0;
+  }
+  var x = 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+  var y = 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+  var z = (1 - 2 * (x1 * x1 + x2 * x2));
+  return {x: x, y: y, z: z};
+}
 
-  geometry = new THREE.Geometry();
-
-  var variance = 2.5 * (Math.random() + Math.random() + Math.random()) / 3.0;
-  var arms = Math.floor(Math.random() * 4) + 3;
-  var twist = 0.6 + 1.5 * (Math.random() + Math.random() + Math.random() + Math.random() + Math.random());
-  var pinch = 0.7 + 1.5 * (Math.random() + Math.random() + Math.random() + Math.random()) / 4.0;
-
-  var clouds = 500 * arms;
-  var stars = 4000;
+function createSphere(n, size, ox, oy, oz) {
+  var clouds = n;
+  var stars = n;
 
   var vertices = new Float32Array((clouds + stars) * 3);
   var colors = new Float32Array((clouds + stars) * 3);
@@ -42,7 +43,6 @@ function init() {
   for (i = 0; i < clouds; ++i) {
     var f = (clouds - i) / clouds;
     var g = i / clouds;
-    var a = Math.random() * 3.14159 * 2.0;
     var x1 = Math.random() * 2.0 - 1.0;
     var x2 = Math.random() * 2.0 - 1.0;
 
@@ -52,23 +52,25 @@ function init() {
       x2 = Math.random() * 2.0 - 1.0;
     }
 
-    var r = f * 700 / 2;
-    var x = r * 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-    var y = r * 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-    var z = r * (1 - 2 * (x1 * x1 + x2 * x2));
+    var r = size;//Math.random() * size + size / 4;
+    var x = ox + r * 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+    var y = oy + r * 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+    var z = oz + r * (1 - 2 * (x1 * x1 + x2 * x2));
 
     vertices[i * 3 + 0] = x;
     vertices[i * 3 + 1] = y;
     vertices[i * 3 + 2] = z;
 
-    var c = Math.pow(f, 0.8);
+    var brightness = Math.random();
+    //var c = Math.random();//Math.pow(f, 0.8);
+    var c = brightness;
     colors[i * 3 + 0] = c * r1 + (1.0 - c) * r2;
     colors[i * 3 + 1] = c * g1 + (1.0 - c) * g2;
     colors[i * 3 + 2] = c * b1 + (1.0 - c) * b2;
 
-    var s = Math.pow(512.0, Math.pow(f * Math.random(), 0.3));
-    alphas[i] = Math.random() * (400.0 - s) / 5000.0 * Math.pow(g, 0.49);
-    sizes[i] = s;
+    var a = 0.1;//Math.pow(1.0, brightness);
+    alphas[i] = 0.25;//Math.random() * (400.0 - s) / 5000.0 * Math.pow(g, 0.49);
+    sizes[i] = 0.5 * size;//0.1 * size + 0.9 * brightness * size;
   }
 
   for (i = clouds; i < clouds + stars; ++i) {
@@ -76,32 +78,102 @@ function init() {
     var g = i / (clouds + stars);
     var a = Math.random() * 3.14159 * 2.0;
 
-    var x1 = Math.random() * 2.0 - 1.0;
-    var x2 = Math.random() * 2.0 - 1.0;
+    /* var x1 = Math.random() * 2.0 - 1.0;
+     * var x2 = Math.random() * 2.0 - 1.0;
 
-    // Marsaglia's method
-    while (x1 * x1 + x2 * x2 > 1) {
-      x1 = Math.random() * 2.0 - 1.0;
-      x2 = Math.random() * 2.0 - 1.0;
-    }
+     * // Marsaglia's method
+     * while (x1 * x1 + x2 * x2 > 1) {
+     *   x1 = Math.random() * 2.0 - 1.0;
+     *   x2 = Math.random() * 2.0 - 1.0;
+     * }
 
-    var r = f * 700 / 1.25;
-    var x = r * 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-    var y = r * 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
-    var z = r * (1 - 2 * (x1 * x1 + x2 * x2));
+     * var r = f * 700 / 1.25;
+     * var x = r * 2 * x1 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+     * var y = r * 2 * x2 * Math.sqrt(1 - x1 * x1 - x2 * x2);
+     * var z = r * (1 - 2 * (x1 * x1 + x2 * x2));
+     */
+    x = vertices[(i - clouds) * 3 + 0];
+    y = vertices[(i - clouds) * 3 + 1];
+    z = vertices[(i - clouds) * 3 + 2];
 
     vertices[i * 3 + 0] = x;
     vertices[i * 3 + 1] = y;
     vertices[i * 3 + 2] = z;
 
-    var c = Math.pow(f, 0.8);
     colors[i * 3 + 0] = 1.0;
     colors[i * 3 + 1] = 1.0;
     colors[i * 3 + 2] = 1.0;
 
     var s = Math.pow(512.0, Math.pow(f * Math.random(), 0.3));
-    alphas[i] = 0.2 + Math.random() * 0.8;
-    sizes[i] = Math.random() * Math.random() * 8.0;
+    alphas[i] = 1.0;//Math.pow(alphas[i - clouds], 0.5);
+    //alphas[i] = 1.0;//0.2 + Math.random() * 0.8;
+    sizes[i] = size / 32.0;//Math.random() * Math.random() * 8.0;
+  }
+
+  return {
+    vertices: vertices,
+    colors: colors,
+    alphas: alphas,
+    sizes: sizes
+  };
+}
+
+function init() {
+  THREE.ImageUtils.crossOrigin = '';
+  container = document.createElement('div');
+  document.body.appendChild(container);
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+  scene = new THREE.Scene();
+
+  var spheres = [];
+  var nvertices = 0;
+  var ncolors = 0;
+  var nalphas = 0;
+  var nsizes = 0;
+  var spread = 1024;
+
+  for (var i = 0; i < 32; ++i) {
+    //var position = marsaglia();
+    //var x = position.x * spread;
+    //var y = position.y * spread;
+    var angle = Math.random() * 3.14159 * 2.0;
+    var x = 0.6 * Math.cos(angle) * spread;
+    var y = 0.6 * Math.sin(angle) * spread;
+    var z = 0.1 * (Math.random() * 2 * spread - spread);
+    var s = Math.random() * 80 + 16;
+    var n = Math.round(s);
+    var sphere = createSphere(n, s, x, y, z);
+    spheres[i] = sphere;
+    nvertices += sphere.vertices.length;
+    ncolors += sphere.colors.length;
+    nalphas += sphere.alphas.length;
+    nsizes += sphere.sizes.length;
+  }
+  geometry = new THREE.Geometry();
+
+  var vertices = new Float32Array(nvertices);
+  var colors = new Float32Array(ncolors);
+  var alphas = new Float32Array(nalphas);
+  var sizes = new Float32Array(nsizes);
+  var ivertices = 0;
+  var icolors = 0;
+  var ialphas = 0;
+  var isizes = 0;
+
+  for (var i = 0; i < spheres.length; ++i) {
+    for (var j = 0; j < spheres[i].vertices.length; ++j) {
+      vertices[ivertices++] = spheres[i].vertices[j];
+    }
+    for (var j = 0; j < spheres[i].colors.length; ++j) {
+      colors[icolors++] = spheres[i].colors[j];
+    }
+    for (var j = 0; j < spheres[i].alphas.length; ++j) {
+      alphas[ialphas++] = spheres[i].alphas[j];
+    }
+    for (var j = 0; j < spheres[i].sizes.length; ++j) {
+      sizes[isizes++] = spheres[i].sizes[j];
+    }
   }
 
   var bufferGeometry = new THREE.BufferGeometry();
@@ -110,8 +182,14 @@ function init() {
   bufferGeometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
   bufferGeometry.addAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
+  var cameraPosition = new Float32Array(3);
+  cameraPosition[0] = camera.position.x;
+  cameraPosition[1] = camera.position.y;
+  cameraPosition[2] = camera.position.z;
+
   uniforms = {
-    texture: { type: "t", value: THREE.ImageUtils.loadTexture('sphere.png') }
+    texture: { type: "t", value: THREE.ImageUtils.loadTexture('sphere.png') },
+    uCameraPos: { type: "3f", value: cameraPosition }
   };
 
   var shaderMaterial = new THREE.ShaderMaterial({

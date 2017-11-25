@@ -59,18 +59,26 @@
   <body>
     <script src="three.min.js"></script>
     <script type="x-shader/x-vertex" id="vertexshader">
+      uniform vec3 uCameraPos;
       attribute float alpha;
       attribute float size;
       attribute vec3 color;
       varying float vAlpha;
       varying float vSize;
       varying vec3 vColor;
+
       void main() {
-      vAlpha = alpha;
+      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+      float cameraDist = distance(mvPosition.xyz, uCameraPos);
+      float pointScale = 0.5 * 1024.0 * 1024.0 / cameraDist / cameraDist;
+      pointScale = clamp(pointScale, 0.1, 1.0);
+
+      vAlpha = clamp(0.5 * alpha * pointScale, 0.1, 1.0);
       vSize = size;
       vColor = color;
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-      gl_PointSize = vSize;
+
+      gl_PointSize = 4.0 * size * pointScale;
       gl_Position = projectionMatrix * mvPosition;
       }
     </script>
