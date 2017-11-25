@@ -197,7 +197,8 @@ function init() {
     vertexShader:   document.getElementById('vertexshader').textContent,
     fragmentShader: document.getElementById('fragmentshader').textContent,
     transparent:    true,
-    depthTest:      false,
+    depthTest:      true,
+    depthWrite:     false,
     blending:       THREE.AdditiveBlending
   });
 
