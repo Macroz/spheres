@@ -222,17 +222,51 @@ function init() {
     emissive: baseColor,
     emissiveIntensity: 0.1,
     envMap: cubeCamera2.renderTarget.texture,
-    metalness: 0.5,
+    metalness: 0.9,
     roughness: 0
   });
 
-  cube = new THREE.Mesh(new THREE.BoxBufferGeometry(512.0, 16.0, 128.0), metalMaterial);
-  scene.add(cube);
+  //cube = new THREE.Mesh(new THREE.BoxBufferGeometry(512.0, 16.0, 128.0), metalMaterial);
+  //scene.add(cube);
 
-  //var ambientlight = new THREE.AmbientLight(0xffffff);
-  //scene.add(ambientlight);
+  var loader = new THREE.FontLoader();
+  loader.load('IndustryInc.json', function (font) {
+    scene.add(font);
+    var text = 'Nitor',
+        height = 20,
+        size = 80,
+        curveSegments = 4,
+        bevelThickness = 2,
+        bevelSize = 2,
+        bevelSegments = 3;
+    textGeo = new THREE.TextBufferGeometry(text, {
+      font: font,
+      size: size,
+      height: height,
+      curveSegments: curveSegments,
+      bevelThickness: bevelThickness,
+      bevelSize: bevelSize,
+      bevelEnabled: true,
+      material: 0,
+      extrudeMaterial: 1
+    });
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+    var centerOffset = 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+    var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
+    textMesh1 = new THREE.Mesh( textGeo, metalMaterial );
+    textMesh1.position.x = centerOffset;
+    textMesh1.position.y = 0;
+    textMesh1.position.z = -halfHeight;
+    textMesh1.rotation.x = Math.PI * 0.5;
+    textMesh1.rotation.y = Math.PI;
+    scene.add(textMesh1);
+  });
 
-  var pointLight = new THREE.PointLight(0xffffe0, 1, 10000);
+  var ambientlight = new THREE.AmbientLight(0xffffff);
+  scene.add(ambientlight);
+
+  var pointLight = new THREE.PointLight(0xffffe0, 0.5, 10000);
   pointLight.position.set(0, 500, 50);
   scene.add(pointLight);
 
