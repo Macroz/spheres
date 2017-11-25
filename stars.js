@@ -28,7 +28,7 @@ function marsaglia() {
   return {x: x, y: y, z: z};
 }
 
-function createSphere(n, size, angle) {
+function createSphere(n, size, angle, speed) {
   var clouds = n;
   var stars = n;
 
@@ -109,6 +109,7 @@ function createSphere(n, size, angle) {
   }
 
   return {
+    speed: speed,
     angle: angle,
     vertices: vertices,
     colors: colors,
@@ -140,9 +141,10 @@ function init() {
     //var x = position.x * spread;
     //var y = position.y * spread;
     var angle = Math.random() * 3.14159 * 2.0;
-    var s = Math.random() * 80 + 16;
-    var n = Math.round(s);
-    var sphere = createSphere(n, s, angle);
+    var s = Math.round(Math.random() * 5) * 20 + 20;
+    var speed = 10.0 / s + 0.1 * Math.random();
+    var n = Math.round(Math.pow(s, 1.1));
+    var sphere = createSphere(n, s, angle, speed);
     spheres[i] = sphere;
     nvertices += sphere.vertices.length;
     ncolors += sphere.colors.length;
@@ -320,7 +322,7 @@ function animate() {
   var pcenters = particles.geometry.attributes.center.array;
   var t = clock.getElapsedTime();
   for (i = 0; i < spheres.length; ++i) {
-    var angle = (spheres[i].angle * 3.14159 * 2.0 + t * 3.14159 * 2.0 / 10) % (3.14159 * 2.0);
+    var angle = (spheres[i].angle * 3.14159 * 2.0 + spheres[i].speed * t * 3.14159 * 2.0 / 10) % (3.14159 * 2.0);
     var x = 0.6 * Math.cos(angle) * spread;
     var y = 0.6 * Math.sin(angle) * spread;
 
