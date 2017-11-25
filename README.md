@@ -1,12 +1,11 @@
-# galaxy
+# Winter Lights - Stars
 
-[Random galaxy visualization](http://macroz.github.io/galaxy/).
+[Winter Lights Visualization](http://macroz.github.io/stars/).
 
-![Galaxy](galaxy.png?raw=true)
+![Winter Lights](stars.png?raw=true)
 
 ## License
 
-Copyright © 2015 Markku Rontu
+Copyright © 2017 Markku Rontu
 
 Distributed under the Eclipse Public License.
-
