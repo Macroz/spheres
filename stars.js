@@ -255,32 +255,32 @@ function init() {
     });
 
   /*
-  var loader = new THREE.FontLoader();
-  loader.load('IndustryInc.json', function (font) {
-    textGeo = new THREE.TextBufferGeometry('Nitor', {
-      font: font,
-      size: 100,
-      height: 20,
-      curveSegments: 4,
-      bevelThickness: 2,
-      bevelSize: 2,
-      bevelEnabled: true,
-      material: 0,
-      extrudeMaterial: 1
-    });
-    textGeo.computeBoundingBox();
-    textGeo.computeVertexNormals();
-    var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
-    var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
-    textMesh = new THREE.Mesh(textGeo, metalMaterial);
-    textMesh.position.x = centerOffset;
-    textMesh.position.y = 0;
-    textMesh.position.z = -halfHeight;
-    textMesh.rotation.x = Math.PI * 0.5;
-    textMesh.rotation.y = Math.PI;
-    scene.add(textMesh);
-  });
-  */
+     var loader = new THREE.FontLoader();
+     loader.load('IndustryInc.json', function (font) {
+     textGeo = new THREE.TextBufferGeometry('Nitor', {
+     font: font,
+     size: 100,
+     height: 20,
+     curveSegments: 4,
+     bevelThickness: 2,
+     bevelSize: 2,
+     bevelEnabled: true,
+     material: 0,
+     extrudeMaterial: 1
+     });
+     textGeo.computeBoundingBox();
+     textGeo.computeVertexNormals();
+     var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+     var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
+     textMesh = new THREE.Mesh(textGeo, metalMaterial);
+     textMesh.position.x = centerOffset;
+     textMesh.position.y = 0;
+     textMesh.position.z = -halfHeight;
+     textMesh.rotation.x = Math.PI * 0.5;
+     textMesh.rotation.y = Math.PI;
+     scene.add(textMesh);
+     });
+   */
 
   //var ambientlight = new THREE.AmbientLight(0xffffff, 0.2);
   //scene.add(ambientlight);
@@ -420,9 +420,14 @@ function render() {
   renderer.render(scene, camera);
 }
 
+function initFullscreen() {
+  var gofull = document.getElementById('gofull');
+  if (gofull) {
+    gofull.addEventListener('mousedown', goFullscreen);
+    gofull.addEventListener('touchstart', goFullscreen);
+  } else {
+    setTimeout(initFullscreen, 500);
+  }
+}
 
-setTimeout(function () {
-var gofull = document.getElementById('gofull');
-gofull.addEventListener('mousedown', goFullscreen);
-gofull.addEventListener('touchstart', goFullscreen);
-}, 100);
+initFullscreen();
