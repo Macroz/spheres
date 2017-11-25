@@ -64,19 +64,19 @@
       attribute float alpha;
       attribute float size;
       attribute vec3 color;
+      attribute vec3 center;
       varying float vAlpha;
-      varying float vSize;
       varying vec3 vColor;
 
       void main() {
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      vec3 pposition = center + position;
+      vec4 mvPosition = modelViewMatrix * vec4(pposition, 1.0);
 
-      float cameraDist = distance(mvPosition.xyz, uCameraPos) + uReflection;
+      float cameraDist = distance(pposition.xyz, uCameraPos) + uReflection;
       float pointScale = 0.5 * 1024.0 * 1024.0 / cameraDist / cameraDist;
       pointScale = clamp(pointScale, 0.1, 1.0);
 
       vAlpha = clamp(0.5 * alpha * pointScale, 0.1, 1.0);
-      vSize = size;
       vColor = color;
 
       gl_PointSize = 4.0 * size * pointScale;
