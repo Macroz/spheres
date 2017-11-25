@@ -298,7 +298,7 @@ function init() {
   document.addEventListener('mousemove', onDocumentMouseMove, false);
   document.addEventListener('touchstart', onDocumentTouchStart, false);
   document.addEventListener('touchmove', onDocumentTouchMove, false);
-  document.getElementById('gofull').addEventListener('click', goFullscreen);
+  document.getElementById('gofull').addEventListener('mousedown', goFullscreen);
   document.getElementById('gofull').addEventListener('touchstart', goFullscreen);
 
   window.addEventListener('resize', onWindowResize, false);
@@ -321,7 +321,7 @@ function goFullscreen(event) {
   var target = document.getElementById('fullscreen');
   var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
   requestFullscreen.call(target);
-  event.preventDefault();
+  if (event) event.preventDefault();
 }
 
 function onDocumentTouchStart(event) {
