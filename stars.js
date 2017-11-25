@@ -7,6 +7,7 @@ var spheres = [];
 var centers;
 var clock;
 var textMesh;
+var logoMesh;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -233,6 +234,26 @@ function init() {
   //cube = new THREE.Mesh(new THREE.BoxBufferGeometry(512.0, 16.0, 128.0), metalMaterial);
   //scene.add(cube);
 
+  var objLoader = new THREE.OBJLoader();
+
+  objLoader.load(
+    'nitor.obj',
+    function (object) {
+      object.traverse(function (child) {
+        if (child instanceof THREE.Mesh) {
+          child.material = metalMaterial;
+        }
+      });
+      object.rotation.x = Math.PI;
+      object.rotation.z = Math.PI;
+      object.scale.x = 40;
+      object.scale.y = 40;
+      object.scale.z = 40;
+      logoMesh = object;
+      scene.add(object);
+    });
+
+  /*
   var loader = new THREE.FontLoader();
   loader.load('IndustryInc.json', function (font) {
     textGeo = new THREE.TextBufferGeometry('Nitor', {
@@ -258,12 +279,13 @@ function init() {
     textMesh.rotation.y = Math.PI;
     scene.add(textMesh);
   });
+  */
 
-  var ambientlight = new THREE.AmbientLight(0xffffff);
-  scene.add(ambientlight);
+  //var ambientlight = new THREE.AmbientLight(0xffffff, 0.2);
+  //scene.add(ambientlight);
 
-  var pointLight = new THREE.PointLight(0xffffe0, 0.5, 10000);
-  pointLight.position.set(0, 500, 50);
+  var pointLight = new THREE.PointLight(0xffffe0, 2.0, 10000);
+  pointLight.position.set(0, 200, 200);
   scene.add(pointLight);
 
   renderer = new THREE.WebGLRenderer();
@@ -332,8 +354,8 @@ function animate() {
   //console.log(particles.geometry.attributes.center);
   particles.geometry.attributes.center.needsUpdate = true;
 
-  var a = 2 * mouseX / windowHalfX;
-  var b = 2 * mouseY / windowHalfY;
+  var a = 0.0;//2 * mouseX / windowHalfX;
+  var b = 0.0;//2 * mouseY / windowHalfY;
   var x = 0.0;
   var y = 500;
   var z = 1000 * b;
@@ -351,10 +373,11 @@ function animate() {
 }
 
 function render() {
-  if (textMesh) {
+  if (logoMesh || textMesh) {
     shaderMaterial.uniforms.uCameraPos.value = new THREE.Vector3(0, 0, 0);
     var reflectionDistance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
-    textMesh.visible = false;
+    if (textMesh) textMesh.visible = false;
+    if (logoMesh) logoMesh.visible = false;
 
     if (count % 2 === 0) {
       metalMaterial.envMap = cubeCamera1.renderTarget.texture;
@@ -367,7 +390,8 @@ function render() {
     }
     ++count;
 
-    textMesh.visible = true;
+    if (textMesh) textMesh.visible = true;
+    if (logoMesh) logoMesh.visible = true;
   }
 
   shaderMaterial.uniforms.uCameraPos.value = camera.position;
