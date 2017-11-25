@@ -40,7 +40,7 @@ function createSphere(n, size, angle, speed) {
 
   var r1 = 1.0;
   var g1 = 1.0;
-  var b1 = 1.0;
+  var b1 = 0.9;
 
   var r2 = 0;
   var g2 = 140 / 255;
