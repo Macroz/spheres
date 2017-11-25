@@ -326,7 +326,7 @@ function goFullscreen(event) {
 function onDocumentTouchStart(event) {
   var target = document.getElementById('fullscreen');
   var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
-  if (event.touches.length === 1) {
+  if (event.touches.length == 2) {
     requestFullscreen.call(target);
   } else if (event.touches.length === 1) {
     event.preventDefault();
