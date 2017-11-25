@@ -1,5 +1,7 @@
 var container;
-var camera, scene, renderer, particles, geometry, material, i, h, color;
+var count = 0;
+var camera, scene, renderer, particles, geometry, i, h, color;
+var shaderMaterial, metalMaterial;
 var mouseX = 0, mouseY = 0;
 
 var windowHalfX = window.innerWidth / 2;
@@ -189,10 +191,11 @@ function init() {
 
   uniforms = {
     texture: { type: "t", value: THREE.ImageUtils.loadTexture('sphere.png') },
-    uCameraPos: { type: "3f", value: cameraPosition }
+    uCameraPos: { type: "3f", value: cameraPosition },
+    uReflection: { type: "1f", value: 0.0 }
   };
 
-  var shaderMaterial = new THREE.ShaderMaterial({
+  shaderMaterial = new THREE.ShaderMaterial({
     uniforms:       uniforms,
     vertexShader:   document.getElementById('vertexshader').textContent,
     fragmentShader: document.getElementById('fragmentshader').textContent,
@@ -204,6 +207,34 @@ function init() {
 
   particles = new THREE.Points(bufferGeometry, shaderMaterial);
   scene.add(particles);
+
+  cubeCamera1 = new THREE.CubeCamera(1, 10000, 1024);
+  cubeCamera1.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+  scene.add(cubeCamera1);
+
+  cubeCamera2 = new THREE.CubeCamera(1, 10000, 1024);
+  cubeCamera2.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+  scene.add(cubeCamera2);
+
+  var baseColor = new THREE.Color(0, 140 / 255, 186 / 255);
+  metalMaterial = new THREE.MeshStandardMaterial({
+    //color: baseColor,
+    emissive: baseColor,
+    emissiveIntensity: 0.1,
+    envMap: cubeCamera2.renderTarget.texture,
+    metalness: 0.5,
+    roughness: 0
+  });
+
+  cube = new THREE.Mesh(new THREE.BoxBufferGeometry(512.0, 16.0, 128.0), metalMaterial);
+  scene.add(cube);
+
+  //var ambientlight = new THREE.AmbientLight(0xffffff);
+  //scene.add(ambientlight);
+
+  var pointLight = new THREE.PointLight(0xffffe0, 1, 10000);
+  pointLight.position.set(0, 500, 50);
+  scene.add(pointLight);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -254,8 +285,9 @@ function animate() {
   var a = 2 * mouseX / windowHalfX;
   var b = 2 * mouseY / windowHalfY;
   var x = 0.0;
-  var y = 600;
-  var z = 800 + 1000 * b;
+  var y = 500;
+  var z = 1000 * b;
+
   camera.position.x = x * Math.cos(a) - y * Math.sin(a);
   camera.position.y = - x * Math.sin(a) + y * Math.cos(a);
   camera.position.z = z;
@@ -269,5 +301,30 @@ function animate() {
 }
 
 function render() {
+  var cameraPosition = new Float32Array(3);
+  cameraPosition[0] = 0;
+  cameraPosition[1] = 0;
+  cameraPosition[2] = 0;
+
+  //shaderMaterial.uniforms.uCameraPos.value = cameraPosition;
+
+  if (count % 2 === 0) {
+    metalMaterial.envMap = cubeCamera1.renderTarget.texture;
+    shaderMaterial.uniforms.uReflection.value = camera.position.distanceTo(0, 0, 0);
+    cubeCamera2.update(renderer, scene);
+  } else {
+    metalMaterial.envMap = cubeCamera2.renderTarget.texture;
+    shaderMaterial.uniforms.uReflection.value = camera.position.distanceTo(0, 0, 0);
+    cubeCamera1.update(renderer, scene);
+  }
+  ++count;
+
+  cameraPosition[0] = camera.position.x;
+  cameraPosition[1] = camera.position.y;
+  cameraPosition[2] = camera.position.z;
+
+  //shaderMaterial.uniforms.uCameraPos.value = cameraPosition;
+  shaderMaterial.uniforms.uReflection.value = 0.0;
+
   renderer.render(scene, camera);
 }
