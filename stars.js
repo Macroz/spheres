@@ -125,6 +125,7 @@ function init() {
   THREE.ImageUtils.crossOrigin = '';
   container = document.createElement('div');
   container.id = 'fullscreen';
+  container.onclick = goFullscreen;
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
@@ -315,6 +316,14 @@ function onDocumentMouseMove(event) {
   mouseY = event.clientY - windowHalfY;
 }
 
+function goFullscreen(event) {
+  var target = document.getElementById('fullscreen');
+  var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
+  if (event.touches.length > 1) {
+    requestFullscreen.call(target);
+  }
+}
+
 function onDocumentTouchStart(event) {
   var target = document.getElementById('fullscreen');
   var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
@@ -322,16 +331,16 @@ function onDocumentTouchStart(event) {
     requestFullscreen.call(target);
   } else if (event.touches.length === 1) {
     event.preventDefault();
-    mouseX = event.touches[ 0 ].pageX - windowHalfX;
-    mouseY = event.touches[ 0 ].pageY - windowHalfY;
+    mouseX = event.touches[0].pageX - windowHalfX;
+    mouseY = event.touches[0].pageY - windowHalfY;
   }
 }
 
 function onDocumentTouchMove(event) {
   if (event.touches.length === 1) {
     event.preventDefault();
-    mouseX = event.touches[ 0 ].pageX - windowHalfX;
-    mouseY = event.touches[ 0 ].pageY - windowHalfY;
+    mouseX = event.touches[0].pageX - windowHalfX;
+    mouseY = event.touches[0].pageY - windowHalfY;
   }
 }
 
