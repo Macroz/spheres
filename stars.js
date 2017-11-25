@@ -125,7 +125,6 @@ function init() {
   THREE.ImageUtils.crossOrigin = '';
   container = document.createElement('div');
   container.id = 'fullscreen';
-  container.onclick = goFullscreen;
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
@@ -327,7 +326,7 @@ function goFullscreen(event) {
 function onDocumentTouchStart(event) {
   var target = document.getElementById('fullscreen');
   var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
-  if (event.touches.length > 1) {
+  if (event.touches.length === 1) {
     requestFullscreen.call(target);
   } else if (event.touches.length === 1) {
     event.preventDefault();
