@@ -315,10 +315,11 @@ function onDocumentMouseMove(event) {
   mouseY = event.clientY - windowHalfY;
 }
 
-function goFullscreen() {
+function goFullscreen(event) {
   var target = document.getElementById('fullscreen');
   var requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen;
   requestFullscreen.call(target);
+  event.preventDefault();
 }
 
 function onDocumentTouchStart(event) {

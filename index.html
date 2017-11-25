@@ -36,6 +36,7 @@
       right: 25px;
       z-index: 10;
       cursor: pointer;
+      -webkit-user-select: none;
       }
 
       #fork a, #gofull a {
@@ -110,7 +111,7 @@
       </a>
     </div>
     <div id="gofull">
-      <a onclick="goFullscreen();" ontouch="goFullscreen();">
+      <a onclick="goFullscreen(event);" ontouch="goFullscreen(event);">
         Fullscreen
       </a>
     </div>
