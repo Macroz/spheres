@@ -6,6 +6,7 @@ var mouseX = 0, mouseY = 0;
 var spheres = [];
 var centers;
 var clock;
+var textMesh;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -249,13 +250,13 @@ function init() {
     textGeo.computeVertexNormals();
     var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
     var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
-    textMesh1 = new THREE.Mesh( textGeo, metalMaterial );
-    textMesh1.position.x = centerOffset;
-    textMesh1.position.y = 0;
-    textMesh1.position.z = -halfHeight;
-    textMesh1.rotation.x = Math.PI * 0.5;
-    textMesh1.rotation.y = Math.PI;
-    scene.add(textMesh1);
+    textMesh = new THREE.Mesh(textGeo, metalMaterial);
+    textMesh.position.x = centerOffset;
+    textMesh.position.y = 0;
+    textMesh.position.z = -halfHeight;
+    textMesh.rotation.x = Math.PI * 0.5;
+    textMesh.rotation.y = Math.PI;
+    scene.add(textMesh);
   });
 
   var ambientlight = new THREE.AmbientLight(0xffffff);
@@ -350,19 +351,26 @@ function animate() {
 }
 
 function render() {
-  shaderMaterial.uniforms.uCameraPos.value = cameraPosition;
+  if (textMesh) {
+    shaderMaterial.uniforms.uCameraPos.value = new THREE.Vector3(0, 0, 0);
+    var reflectionDistance = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
+    textMesh.visible = false;
 
-  if (count % 2 === 0) {
-    metalMaterial.envMap = cubeCamera1.renderTarget.texture;
-    shaderMaterial.uniforms.uReflection.value = camera.position.distanceTo(0, 0, 0);
-    cubeCamera2.update(renderer, scene);
-  } else {
-    metalMaterial.envMap = cubeCamera2.renderTarget.texture;
-    shaderMaterial.uniforms.uReflection.value = camera.position.distanceTo(0, 0, 0);
-    cubeCamera1.update(renderer, scene);
+    if (count % 2 === 0) {
+      metalMaterial.envMap = cubeCamera1.renderTarget.texture;
+      shaderMaterial.uniforms.uReflection.value = reflectionDistance;
+      cubeCamera2.update(renderer, scene);
+    } else {
+      metalMaterial.envMap = cubeCamera2.renderTarget.texture;
+      shaderMaterial.uniforms.uReflection.value = reflectionDistance;
+      cubeCamera1.update(renderer, scene);
+    }
+    ++count;
+
+    textMesh.visible = true;
   }
-  ++count;
 
+  shaderMaterial.uniforms.uCameraPos.value = camera.position;
   shaderMaterial.uniforms.uReflection.value = 0.0;
 
   renderer.render(scene, camera);
