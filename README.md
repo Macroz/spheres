@@ -1,8 +1,8 @@
-# Winter Lights - Stars
+# Demoscene - Three.js - Winter Light Spheres
 
-[Winter Lights Visualization](http://macroz.github.io/stars/).
+[Live Demo](http://macroz.github.io/spheres/).
 
-![Winter Lights](stars.png?raw=true)
+![Winter Light Spheres](spheres.png?raw=true)
 
 ## License
 

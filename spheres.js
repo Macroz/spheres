@@ -11,6 +11,7 @@ var logoMesh;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
+var ss = Math.min(windowHalfX, windowHalfY) * 0.05;
 
 init();
 animate();
@@ -144,7 +145,7 @@ function init() {
     //var x = position.x * spread;
     //var y = position.y * spread;
     var angle = Math.random() * 3.14159 * 2.0;
-    var s = Math.round(Math.random() * 5) * 20 + 20;
+    var s = Math.round(Math.random() * 5) * ss + ss;
     var speed = 10.0 / s + 0.1 * Math.random();
     var n = Math.round(Math.pow(s, 1.1));
     var sphere = createSphere(n, s, angle, speed);
@@ -247,40 +248,37 @@ function init() {
       });
       object.rotation.x = Math.PI;
       object.rotation.z = Math.PI;
-      object.scale.x = 40;
-      object.scale.y = 40;
-      object.scale.z = 40;
       logoMesh = object;
       scene.add(object);
     });
 
   /*
-     var loader = new THREE.FontLoader();
-     loader.load('IndustryInc.json', function (font) {
-     textGeo = new THREE.TextBufferGeometry('Nitor', {
-     font: font,
-     size: 100,
-     height: 20,
-     curveSegments: 4,
-     bevelThickness: 2,
-     bevelSize: 2,
-     bevelEnabled: true,
-     material: 0,
-     extrudeMaterial: 1
-     });
-     textGeo.computeBoundingBox();
-     textGeo.computeVertexNormals();
-     var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
-     var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
-     textMesh = new THREE.Mesh(textGeo, metalMaterial);
-     textMesh.position.x = centerOffset;
-     textMesh.position.y = 0;
-     textMesh.position.z = -halfHeight;
-     textMesh.rotation.x = Math.PI * 0.5;
-     textMesh.rotation.y = Math.PI;
-     scene.add(textMesh);
-     });
-   */
+  var loader = new THREE.FontLoader();
+  loader.load('IndustryInc.json', function (font) {
+    textGeo = new THREE.TextBufferGeometry('Digital Engineering', {
+      font: font,
+      size: 32,
+      height: 5,
+      curveSegments: 4,
+      bevelThickness: 2,
+      bevelSize: 0.5,
+      bevelEnabled: false,
+      material: 0,
+      extrudeMaterial: 1
+    });
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+    var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+    var halfHeight = 0.5 * (textGeo.boundingBox.max.y - textGeo.boundingBox.min.y);
+    textMesh = new THREE.Mesh(textGeo, metalMaterial);
+    textMesh.position.x = centerOffset - 15.0;
+    textMesh.position.y = 0;
+    textMesh.position.z = -halfHeight - 100;
+    textMesh.rotation.x = Math.PI * 0.5;
+    textMesh.rotation.y = Math.PI;
+    scene.add(textMesh);
+  });
+  */
 
   //var ambientlight = new THREE.AmbientLight(0xffffff, 0.2);
   //scene.add(ambientlight);
@@ -344,6 +342,8 @@ function onDocumentTouchMove(event) {
 function onWindowResize(event) {
   windowHalfX = window.innerWidth / 2;
   windowHalfY = window.innerHeight / 2;
+  ss = Math.min(windowHalfX, windowHalfY) * 0.05;
+
 
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
